@@ -1,0 +1,40 @@
+<mat-form-field appearance="outline" class="search-field">
+  <mat-label>Search Players</mat-label>
+  <input matInput [(ngModel)]="searchQuery">
+</mat-form-field>
+
+<div *ngIf="nbaService.loading(); else tableTemplate">Loading...</div>
+
+<ng-template #tableTemplate>
+  <table mat-table [dataSource]="filteredPlayers">
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef>First Name</th>
+      <td mat-cell *matCellDef="let player">{{ player.firstName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef>Last Name</th>
+      <td mat-cell *matCellDef="let player">{{ player.lastName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="team">
+      <th mat-header-cell *matHeaderCellDef>Team</th>
+      <td mat-cell *matCellDef="let player">{{ player.team }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>Position</th>
+      <td mat-cell *matCellDef="let player">{{ player.position }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let player">
+        <button mat-button (click)="openPlayerModal(player)">View Player Info</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['firstName', 'lastName', 'team', 'position', 'actions']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['firstName', 'lastName', 'team', 'position', 'actions'];"></tr>
+  </table>
+</ng-template>

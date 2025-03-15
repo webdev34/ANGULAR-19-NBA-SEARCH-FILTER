@@ -1,0 +1,8 @@
+<h2>{{ data.firstName }} {{ data.lastName }}</h2>
+
+<div *ngFor="let keyItem of dataKeys(); trackBy: trackByOriginalKey">
+  <strong>{{ keyItem.formatted }}:</strong> {{ data[keyItem.original] }}
+</div>
+
+
+<!--{{ data[keyItem.original] }}-->
