@@ -1,5 +1,5 @@
 import { Component, Inject, computed, Signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,12 +14,18 @@ export class NbaPlayerModalComponent {
 
   dataKeys: Signal<{ original: string; formatted: string }[]> = computed(() =>
     Object.keys(this.data).map((key) => ({
-      original: key, // Store original property key
-      formatted: key.replace(/([A-Z])/g, ' $1').trim(), // Format key (camelCase to spaced words)
+      original: key,
+      formatted: key.replace(/([A-Z])/g, ' $1').trim(),
     }))
   );
 
   trackByOriginalKey(index: number, item: { original: string }) {
-    return item.original; // Track by original property key
+    return item.original;
+  }
+
+  dialogRef = Inject(MatDialogRef<NbaPlayerModalComponent>);
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }

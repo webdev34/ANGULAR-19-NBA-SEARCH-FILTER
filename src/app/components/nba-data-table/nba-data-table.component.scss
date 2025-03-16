@@ -1,0 +1,21 @@
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.hidden-until-loaded {
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+}
+
+.mat-mdc-row {
+  background-color: white;
+  color: black;
+}
+
+.mat-mdc-button {
+  background-color: black;
+  &:hover {
+    color: white;
+  }
+}

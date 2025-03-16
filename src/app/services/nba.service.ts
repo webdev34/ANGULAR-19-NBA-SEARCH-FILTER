@@ -1,6 +1,6 @@
-import { Injectable, signal, effect } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { delay } from 'rxjs/operators';
+import { Injectable, signal, effect, inject } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -8,19 +8,36 @@ import { delay } from 'rxjs/operators';
 export class NbaService {
   players = signal<any[]>([]);
   loading = signal<boolean>(true);
+  private platformId = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient) {
+  constructor() {
     effect(() => {
-      this.http
-        .get<any[]>('assets/data/nba-players.json') 
-        .pipe(delay(2000)) 
-        .subscribe({
-          next: (data) => {
-            this.players.set(data);
-            this.loading.set(false);
-          },
-          error: (error) => console.error('Failed to load NBA players:', error),
-        });
+      if (isPlatformBrowser(this.platformId)) {
+        this.loadPlayers();
+      }
     });
+  }
+
+  async loadPlayers() {
+    this.loading.set(true);
+
+    try {
+      const baseUrl = isPlatformBrowser(this.platformId) ? window.location.origin : '';
+      const url = `${baseUrl}/assets/data/nba-players.json`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      this.players.set(data);
+    } catch (error) {
+      console.error('Failed to load NBA players:', error);
+    } finally {
+      this.loading.set(false);
+    }
   }
 }

@@ -2,3 +2,30 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-mdc-progress-spinner {
+  margin: 0 auto;
+}
+
+// Modal styles
+.mdc-dialog {
+  &--open {
+    .mat-mdc-dialog-surface {
+      background: white;
+      padding: 20px;
+    }
+  }
+
+  .mat-mdc-dialog-component-host {
+    div {
+      margin-bottom: 5px;
+    }
+    strong {
+      text-transform: capitalize;
+    }
+  }
+
+  .mat-mdc-dialog-inner-container {
+    min-width: 300px;
+  }
+ }

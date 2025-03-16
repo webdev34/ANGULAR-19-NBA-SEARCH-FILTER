@@ -1,12 +1,14 @@
-<mat-form-field appearance="outline" class="search-field">
-  <mat-label>Search Players</mat-label>
-  <input matInput [(ngModel)]="searchQuery">
-</mat-form-field>
-
-<div *ngIf="nbaService.loading(); else tableTemplate">Loading...</div>
+<div *ngIf="nbaService.loading(); else tableTemplate">
+  <mat-spinner></mat-spinner>
+</div>
 
 <ng-template #tableTemplate>
-  <table mat-table [dataSource]="filteredPlayers">
+  <h1>NBA Player Search filter</h1>
+  <mat-form-field appearance="outline">
+    <mat-label>Search Players</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (keyup)="applyFilter()" placeholder="Search by name, team, or position">
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
     <ng-container matColumnDef="firstName">
       <th mat-header-cell *matHeaderCellDef>First Name</th>
       <td mat-cell *matCellDef="let player">{{ player.firstName }}</td>
@@ -34,7 +36,17 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['firstName', 'lastName', 'team', 'position', 'actions']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['firstName', 'lastName', 'team', 'position', 'actions'];"></tr>
+    <!-- Table Header & Row Definitions -->
+    <thead>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    </thead>
+    <tbody>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </tbody>
+
   </table>
+
 </ng-template>
+
+  <!-- Pagination -->
+  <mat-paginator  [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons (page)="onPageChange($event)"[class.hidden-until-loaded]="nbaService.loading()"></mat-paginator>
